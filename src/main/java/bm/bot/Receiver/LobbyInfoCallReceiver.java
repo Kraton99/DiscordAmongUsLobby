@@ -21,9 +21,9 @@ public class LobbyInfoCallReceiver implements CallReceiver
         String time = str.split( " " )[ 1 ];
         String admin = str.split( " " )[ 2 ];
 
-        if( SignInBot.lobbyExists( time, admin ) )
+
+        SignInBot.getLobby( time, admin ).ifPresentOrElse( lobby ->
         {
-            Lobby lobby = SignInBot.getLobby( time, admin );
             textchannel.sendMessage( "Twórca: " + lobby.getLobbyAdmin().getName() + " godzina: " + lobby.getTime() + "\n" + "Lista graczy: " + lobby.getLobbyUserNames().size() + "/10" ).queue();
             int i = 1;
             String message = "";
@@ -40,11 +40,7 @@ public class LobbyInfoCallReceiver implements CallReceiver
                 i += 1;
             }
             textchannel.sendMessage( message + "Liczba graczy rezerwowych: " + lobby.getReservesUserNames().size() + "\n" + reserve ).queue();
-        }
-        else
-        {
-            textchannel.sendMessage( "Takie lobby nie istnieje :poop:" ).queue();
-        }
+        }, () -> textchannel.sendMessage( "Takie lobby nie istnieje :poop:" ).queue() );
 
     }
 }

@@ -4,19 +4,16 @@ import lombok.Getter;
 import lombok.Setter;
 import net.dv8tion.jda.api.entities.User;
 
-import java.util.LinkedList;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Getter
-@Setter
 public class Lobby
 {
 
-    private String time;
-    private LinkedList< User > lobbyUserNames = new LinkedList<>();
-    private LinkedList< User > reservesUserNames = new LinkedList<>();
-    private User lobbyAdmin;
+    private final String time;
+    private final User lobbyAdmin;
+    private final LinkedList< User > lobbyUserNames = new LinkedList<>();
+    private final LinkedList< User > reservesUserNames = new LinkedList<>();
     private boolean hasStarted;
 
     public Lobby( String time, User lobbyAdmin )
@@ -67,6 +64,16 @@ public class Lobby
             }
         }
         return Optional.empty();
+    }
+
+    public List< User > getLobbyUserNames()
+    {
+        return Collections.unmodifiableList(lobbyUserNames);
+    }
+
+    public List< User > getReservesUserNames()
+    {
+        return Collections.unmodifiableList(reservesUserNames);
     }
 
     @Override

@@ -22,6 +22,7 @@ public class userToKickEvent extends TimerTask
     @Override
     public void run()
     {
+        // lobby might be deleted already
         if( !SignInBot.getLobbies().contains( lobby ) )
         {
             return;

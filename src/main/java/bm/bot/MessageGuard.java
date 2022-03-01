@@ -13,10 +13,12 @@ public class MessageGuard extends ListenerAdapter
 
     public void onGuildMessageReceived( GuildMessageReceivedEvent aEvent )
     {
+        // filter out bot messages
         if( aEvent.getAuthor().isBot() )
         {
             return;
         }
+        // channel defined for bot
         if( !aEvent.getChannel().getName().equals( "zapisy-among-us" ) )
         {
             return;
@@ -62,7 +64,6 @@ public class MessageGuard extends ListenerAdapter
                 break;
             case KICK:
                 new KickFromLobbyCallReceiver().receiveCall( aEvent );
-                break;
         }
     }
 }

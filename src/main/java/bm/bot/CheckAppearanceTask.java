@@ -27,7 +27,7 @@ public class CheckAppearanceTask extends TimerTask
     public void run()
     {
         VoiceChannel vchannel = null;
-        lobby.setHasStarted( true );
+       // lobby.setHasStarted( true );
         List< VoiceChannel > vChannels = event.getJDA().getVoiceChannelsByName( lobby.getLobbyAdmin().getName() + " " + lobby.getTime(), true );
         String message = "<bm.bot.Lobby " + lobby.getLobbyAdmin().getName() + " " + lobby.getTime() + ">" + "Mineło 5 minut od startu lobby. Osoby, które nie pojawiły się na czas zostały wyrzucone. Jeżeli chcesz ponownie dołączyć do lobby wpisz \"join <godzina> <tworca>\" \n";
         for( VoiceChannel channel : vChannels )
@@ -62,7 +62,7 @@ public class CheckAppearanceTask extends TimerTask
         }
         for( User uDelete : toDelete )
         {
-            lobby.getLobbyUserNames().remove( uDelete );
+            lobby.deleteUser( uDelete );
         }
 
         TextChannel channel = event.getChannel();

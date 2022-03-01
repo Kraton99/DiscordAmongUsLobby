@@ -14,17 +14,16 @@ public class LeaveLobbyCallReceiver implements CallReceiver
     {
         String str = aEvent.getMessage().getContentDisplay().toLowerCase();
         TextChannel textchannel = aEvent.getChannel();
-        User user = aEvent.getAuthor();
+        final User user = aEvent.getAuthor();
 
         String time = str.split( " " )[ 1 ];
         String admin = str.split( " " )[ 2 ];
-        if( SignInBot.lobbyExists( time, admin ) )
-        {
-            Lobby lobby = SignInBot.getLobby( time, admin );
 
+        SignInBot.getLobby( time, admin ).ifPresentOrElse( lobby ->
+        {
             if( lobby.getLobbyUserNames().contains( user ) )
             {
-
+                //TODO: pass removing logic to some LobbyHandler
                 if( lobby.getTime().equals( time ) && lobby.getLobbyUserNames().size() == 10 )
                 {
                     lobby.deleteUser( user );
@@ -35,10 +34,10 @@ public class LeaveLobbyCallReceiver implements CallReceiver
                         return;
                     }
 
-                    user = lobby.getReservesUserNames().get( 0 );
-                    lobby.deleteUserReserve( user );
-                    lobby.addUser( user );
-                    textchannel.sendMessage( user.getAsMention() + " Zostałeś/aś przeniesiony z listy rezerwowych na listę graczy. Gratulujemy!! 😎" ).queue();
+                    User userToTransfer = lobby.getReservesUserNames().get( 0 );
+                    lobby.deleteUserReserve( userToTransfer );
+                    lobby.addUser( userToTransfer );
+                    textchannel.sendMessage( userToTransfer.getAsMention() + " Zostałeś/aś " + "przeniesiony z listy rezerwowych na listę graczy. Gratulujemy!! 😎" ).queue();
                 }
                 else if( lobby.getTime().equals( time ) )
                 {
@@ -57,11 +56,6 @@ public class LeaveLobbyCallReceiver implements CallReceiver
             {
                 textchannel.sendMessage( user.getAsMention() + " Nie byłeś zapisany na tą godzine :poop:" ).queue();
             }
-        }
-        else
-        {
-            textchannel.sendMessage( user.getAsMention() + " Takie lobby nie istnieje :poop:" ).queue();
-        }
-
+        }, () -> textchannel.sendMessage( user.getAsMention() + " Takie lobby nie istnieje :poop:" ).queue() );
     }
 }
